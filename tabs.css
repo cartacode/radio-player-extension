@@ -1,0 +1,93 @@
+.audio-tag {
+	height: 500px;
+	position: relative;
+	display: none;
+}
+
+audio {
+	margin: auto;
+	display: block;
+    background: #f1f3f3;
+}
+
+.audio-status {
+	width: 250px;
+    background: #000;
+    color: #fff;
+    margin: auto;
+    padding: 0px 25px;
+    display: none;
+}
+
+.title-wrapper {
+	padding: 15px 0;
+}
+
+.station-name {
+	font-size: 112px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.city-name {
+	background: #378ec1;
+    color: #000;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 46;
+    font-weight: 700;
+    width: 220px;
+    margin: auto;
+}
+
+.social-panel {
+	text-align: center;
+	padding: 35px 0;
+	display: flex;
+	justify-content: center;
+}
+
+.social-status {
+	display: none;
+}
+
+.social-wrapper {
+	position: relative;
+	padding: 0 5px;
+}
+
+.social-wrapper i {
+	display: inline-block;
+    border-radius: 50%;
+    box-shadow: 0px 0px 2px #888;
+    padding: 0.5em 0.7em;
+    font-size: 25px;
+    background: #6ec1e4;
+    color: white;
+}
+
+i.fa-instagram {
+	display: inline-block;
+    border-radius: 50%;
+    box-shadow: 0px 0px 2px #888;
+    padding: 0.5em 0.6em;
+    font-size: 25px;
+    background: #6ec1e4;
+    color: white;
+}
+
+.custom-icon {
+	height: 30px;
+    width: 30px;
+    background: #6ec1e4;
+    border-radius: 50%;
+    flex: 1;
+    padding: 10px;
+}
+
+.logo img {
+    width: 100%;
+    height: auto;
+}
+
+
