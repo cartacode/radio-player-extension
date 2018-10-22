@@ -1,7 +1,5 @@
 .audio-tag {
-	height: 500px;
 	position: relative;
-	display: none;
 }
 
 audio {
@@ -16,7 +14,6 @@ audio {
     color: #fff;
     margin: auto;
     padding: 0px 25px;
-    display: none;
 }
 
 .title-wrapper {

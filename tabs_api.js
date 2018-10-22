@@ -25,30 +25,21 @@ function coreGetApi(url) {
 	});
 }
 
+// check if document is ready
+if (document.readyState!='loading') {
+	coreGetApi('https://stream.949thecity.com/api/nowplaying/4')
+		.then(function (res) {
+			const artist = res.now_playing.song.artist;
+			const title = res.now_playing.song.text;
+			const stationName = res.station.name;
 
-// add listen for mouse hover and out event
-document.getElementById('audioPlayer').addEventListener('mouseover', function(ev) {
-	document.getElementById('audio-status').style.display = 'block';
-});
+			// fill status
+			document.getElementById('artist-name').innerHTML = artist;
+			document.getElementById('title').innerHTML = title;
 
-document.getElementById('audioPlayer').addEventListener('mouseout', function(ev) {
-	document.getElementById('audio-status').style.display = 'none';
-});
+			document.getElementById('audioPlayer').src = res.station.listen_url;
 
-coreGetApi('https://stream.949thecity.com/api/nowplaying/4')
-	.then(function (res) {
-		const artist = res.now_playing.song.artist;
-		const title = res.now_playing.song.text;
-		const stationName = res.station.name;
-
-		// fill status
-		document.getElementById('artist-name').innerHTML = artist;
-		document.getElementById('title').innerHTML = title;
-
-		document.getElementById('audioPlayer').src = res.station.listen_url;
-
-		document.getElementById('audio-tag').style.display = 'block';	
-
-	}).catch(function (err) {
-		alert("can't open stream");
-	});
+		}).catch(function (err) {
+			alert("can't open stream");
+		});
+}
