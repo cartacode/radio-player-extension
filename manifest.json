@@ -1,9 +1,8 @@
 {
   "name": "One Sream Player",
   "description": "Chrome Extension for One stream player",
-  "version": "0.3",
+  "version": "1.0",
   "permissions": [
-    "tabs",
     "activeTab",
     "declarativeContent",
     "storage",
@@ -12,19 +11,11 @@
     "contextMenus"
   ],
   "background": {
-    "persistent": true,
-    "scripts": ["background.js"]
+    "page": "background.html",
+    "persistent": false
   },
   "page_action": {
-    "default_popup": "tabs_api.html"
+    "default_popup": "popup.html"
   },
-  "content_scripts": [
-    {
-      "matches": ["http://www.google.com/*"],
-      "js": ["js/jquery3.min.js", "tabs_api.js"],
-      "run_at": "document_start"
-    }
-  ],
-  "offline_enabled": true,
   "manifest_version": 2
 }

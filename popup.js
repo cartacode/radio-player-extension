@@ -11,8 +11,13 @@ port.onMessage.addListener(function(msg) {
     addValuesToDom(msg)
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-	document.getElementById('play').addEventListner("click", function() {
-		console.log('play clicked')
-	})
-}, false);
+var playButton = document.getElementById('play');
+var pauseButton = document.getElementById('pause');
+
+playButton.onclick = function(element) {
+	console.log('ok')
+}
+
+pauseButton.onclick = function(element) {
+	console.log('ok')
+}

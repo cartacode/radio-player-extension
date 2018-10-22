@@ -8,14 +8,21 @@ chrome.runtime.onInstalled.addListener(function() {
       conditions: [
       	new chrome.declarativeContent.PageStateMatcher({
 	        pageUrl: {hostEquals: 'developer.chrome.com'},
-	      }),
-      	new chrome.declarativeContent.PageStateMatcher({
-	        css: ["body"],
 	      })
+      	// new chrome.declarativeContent.PageStateMatcher({
+	      //   css: ["body"],
+	      // })
       ],
       actions: [new chrome.declarativeContent.ShowPageAction()]
     }]);
   });
+});
+
+chrome.pageAction.onClicked.addListener(function(tab) {
+  console.log('Turning ' + tab);
+  document.getElementById('play').addEventListener("click", function(ev) {
+  	console.log('clicking pageAction ' + ev);
+  })
 });
 
 function coreGetApi(url) {
@@ -60,14 +67,3 @@ coreGetApi('https://stream.949thecity.com/api/nowplaying/4')
 	}).catch(function (err) {
 		alert("can't open stream");
 	});
-
-chrome.runtime.onMessage.addListener(messageReceived);
-
-function messageReceived(msg) {
-    // Do your work here
-   	chrome.storage.sync.get(/* String or Array */["audioUrl"], function(items){
-	    console.log(items);
-		var audio = new Audio(res.station.listen_url);
-		audio.play();	    
-	});
-}
