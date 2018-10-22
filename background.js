@@ -1,28 +1,47 @@
-// chrome.browserAction.onClicked.addListener(function(tab) {
-//   chrome.tabs.create({url:chrome.extension.getURL("tabs_api.html")});
-// });
+var audio = null;
 
 chrome.runtime.onInstalled.addListener(function() {
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
     chrome.declarativeContent.onPageChanged.addRules([{
       conditions: [
       	new chrome.declarativeContent.PageStateMatcher({
-	        pageUrl: {hostEquals: 'developer.chrome.com'},
+	        css: ["body"],
 	      })
-      	// new chrome.declarativeContent.PageStateMatcher({
-	      //   css: ["body"],
-	      // })
       ],
       actions: [new chrome.declarativeContent.ShowPageAction()]
     }]);
   });
 });
 
-chrome.pageAction.onClicked.addListener(function(tab) {
-  console.log('Turning ' + tab);
-  document.getElementById('play').addEventListener("click", function(ev) {
-  	console.log('clicking pageAction ' + ev);
-  })
+//for listening any message which comes from runtime
+chrome.runtime.onMessage.addListener(messageReceived);
+
+function messageReceived(msg) {
+	onsole.log("before Connected .....");
+   // Do your work here
+   chrome.extension.onConnect.addListener(function(port) {
+     
+     console.log("Back Connected .....");
+      port.onMessage.addListener(function(msg) {
+      	console.log("Back message Connected .....", msg);
+      });
+
+   });
+}
+
+chrome.extension.onConnect.addListener(function(port) {
+    port.postMessage("back ground send");
+      
+	port.onMessage.addListener(function(msg) {
+		console.log("message recieved " + msg);
+		if (msg == 'play_') {
+			audio.play();
+		} else {
+			audio.pause()
+		}
+
+	});
+
 });
 
 function coreGetApi(url) {
@@ -61,7 +80,8 @@ coreGetApi('https://stream.949thecity.com/api/nowplaying/4')
 		const stationName = res.station.name;
 
 		chrome.storage.sync.set({ "audioUrl": res.station.listen_url }, function(){
-		    //  A data saved callback omg so fancy
+			//  A data saved callback omg so fancy
+			audio = new Audio(res.station.listen_url);
 		});
 
 	}).catch(function (err) {

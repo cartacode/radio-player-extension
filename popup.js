@@ -6,18 +6,24 @@
 var port = chrome.extension.connect({
     name: "Sample Communication"
 });
-port.postMessage("Hi BackGround");
+
 port.onMessage.addListener(function(msg) {
-    addValuesToDom(msg)
+    console.log('pop es:', msg)
 });
 
 var playButton = document.getElementById('play');
 var pauseButton = document.getElementById('pause');
 
+
 playButton.onclick = function(element) {
-	console.log('ok')
+	console.log("Connected .....");
+	// check selection text can be converted into digit
+	port.postMessage("play_");
 }
 
 pauseButton.onclick = function(element) {
 	console.log('ok')
+	console.log("Connected .....");
+	// check selection text can be converted into digit
+	port.postMessage("pause_");
 }
