@@ -87,6 +87,14 @@ chrome.runtime.onConnect.addListener(function(port) {
             playButton.style.display = 'block';
             pauseButton.style.display = 'none';
           }
+
+          if (msg.muted) {
+            volumOnElement.style.display = 'none';
+            volumOffElement.style.display = 'block';
+          } else {
+            volumOnElement.style.display = 'block';
+            volumOffElement.style.display = 'none';
+          }
           
           break;
       }
