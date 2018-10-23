@@ -11,25 +11,39 @@
     justify-content: center;
 }
 
+.audio-wrapper #play {
+    display: none;
+    font-size: 20px;
+}
+
 .audio-wrapper #pause {
     display: none;
+    font-size: 20px;
 }
 
 .audio-wrapper #volume_control_off {
     display: none;
+    font-size: 20px;
+}
+
+.audio-wrapper #volume_control {
+    font-size: 20px;
 }
 
 .audio-status-icon {
+    margin: auto 0;
     margin-right: 15px;
 }
 
 #timeline {
+    margin: auto 0;
     margin-right: 15px;
 }
 
 .status-wrapper {
     position: relative;
     display: flex;
+    margin: auto 0;
     margin-right: 15px;
 }
 

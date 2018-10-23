@@ -1,6 +1,7 @@
 var audio = null;
 var timer = new Timer();
 var time = '00:00:00';
+var audioStart = 0;
 
 chrome.runtime.onInstalled.addListener(function() {
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
@@ -19,6 +20,7 @@ chrome.runtime.onInstalled.addListener(function() {
 function startTimer(startTime) {
 	if (audio && timer) {
 		audio.play();
+		audioStart = 1;
 		
 		var port = chrome.runtime.connect({
 		    name: "Sample Communication"
@@ -26,15 +28,13 @@ function startTimer(startTime) {
 
 
 		var timeList = startTime.split(':');
-		timeList = timeList.map((item) => {
+		timeList = timeList.reverse().map((item) => {
 		  return parseInt(item);
 		})
 
 		timeList = [0, ...timeList, 0];
 
-		console.log('****: ', timeList, timer, startTime);
 		timer.start({callback: function (newTimer) {
-			console.log("&&&: ", newTimer);
 			time = newTimer.getTimeValues().toString(['hours', 'minutes', 'seconds']);
 		}});
 
@@ -46,6 +46,7 @@ function pauseTimer() {
 	if (audio) {
 		audio.pause();
 		timer.pause();
+		audioStart = 0;
 
 		var port = chrome.runtime.connect({
 		    name: "Sample Communication"
@@ -59,20 +60,28 @@ function sendTime() {
 	var port = chrome.runtime.connect({
 	    name: "Sample Communication"
 	});
+	var params = { type: 'sendTime', time: time, audio: 0 };
 
-	port.postMessage({ type: 'sendTime', time: time });
+	if (audioStart) {
+		params.audio = 1;
+	}
+
+	port.postMessage(params);
+}
+
+function changeVolume(type) {
+	if (audio) {
+		if (type === 'on') {
+			audio.muted = false;
+		} else {
+			audio.muted = true;
+		}
+	}
 }
 
 chrome.runtime.onConnect.addListener(function(port) {
 	
 	port.onMessage.addListener(function(msg) {
-		console.log('back: ', msg)
-		if (msg.type == 'play_') {
-			startTimer(msg.time);
-		} else {
-			pauseTimer();
-		}
-
 		switch (msg.type) {
 			case "play_":
 				startTimer(msg.time);
@@ -80,6 +89,14 @@ chrome.runtime.onConnect.addListener(function(port) {
 
 			case "pause_":
 				pauseTimer();
+				break;
+
+			case "volumeOn":
+				changeVolume('on');
+				break;
+
+			case "volumeOff":
+				changeVolume('off');
 				break;
 
 			default:
@@ -123,9 +140,11 @@ function coreGetApi(url) {
 coreGetApi('https://stream.949thecity.com/api/nowplaying/4')
 	.then(function (res) {
 		const artist = res.now_playing.song.artist;
-		const title = res.now_playing.song.text;
+		const title = res.now_playing.song.title;
 		const stationName = res.station.name;
 
+		chrome.storage.sync.set({ "artist": artist });
+		chrome.storage.sync.set({ "title": title });
 		chrome.storage.sync.set({ "audioUrl": res.station.listen_url }, function(){
 			//  A data saved callback omg so fancy
 			audio = new Audio(res.station.listen_url);
