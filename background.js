@@ -1,4 +1,6 @@
 var audio = null;
+var timer = new Timer();
+var time = null;
 
 chrome.runtime.onInstalled.addListener(function() {
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
@@ -13,31 +15,47 @@ chrome.runtime.onInstalled.addListener(function() {
   });
 });
 
-//for listening any message which comes from runtime
-chrome.runtime.onMessage.addListener(messageReceived);
 
-function messageReceived(msg) {
-	onsole.log("before Connected .....");
-   // Do your work here
-   chrome.extension.onConnect.addListener(function(port) {
-     
-     console.log("Back Connected .....");
-      port.onMessage.addListener(function(msg) {
-      	console.log("Back message Connected .....", msg);
-      });
+function startTimer(startTime) {
+	audio.play();
+	console.log('start timer ')
+	var port = chrome.runtime.connect({
+	    name: "Sample Communication"
+	});
+	port.postMessage({ type: 'startTime', time: startTime });
+	var timeList = startTime.split(':');
+	timeList = timeList.map((item) => {
+	  return parseInt(item);
+	})
 
-   });
+	timeList = [0, ...timeList, 0];
+
+	timer.start({callback: function (timer) {
+		time = timer.getTimeValues().toString(['hours', 'minutes', 'seconds']);
+	}});
 }
 
-chrome.extension.onConnect.addListener(function(port) {
+function pauseTimer() {
+	audio.pause();
+	timer.pause();
+
+	var port = chrome.runtime.connect({
+	    name: "Sample Communication"
+	});
+	port.postMessage({ type: 'endTime', time: time });
+}
+
+chrome.runtime.onConnect.addListener(function(port) {
+	
     port.postMessage("back ground send");
       
 	port.onMessage.addListener(function(msg) {
 		console.log("message recieved " + msg);
-		if (msg == 'play_') {
-			audio.play();
+		if (msg.type == 'play_') {
+			startTimer(msg.time);
+
 		} else {
-			audio.pause()
+			pauseTimer();
 		}
 
 	});
