@@ -1,6 +1,6 @@
 var audio = null;
 var timer = new Timer();
-var time = null;
+var time = '00:00:00';
 
 chrome.runtime.onInstalled.addListener(function() {
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
@@ -17,45 +17,74 @@ chrome.runtime.onInstalled.addListener(function() {
 
 
 function startTimer(startTime) {
-	audio.play();
-	console.log('start timer ')
-	var port = chrome.runtime.connect({
-	    name: "Sample Communication"
-	});
-	port.postMessage({ type: 'startTime', time: startTime });
-	var timeList = startTime.split(':');
-	timeList = timeList.map((item) => {
-	  return parseInt(item);
-	})
+	if (audio && timer) {
+		audio.play();
+		
+		var port = chrome.runtime.connect({
+		    name: "Sample Communication"
+		});
 
-	timeList = [0, ...timeList, 0];
 
-	timer.start({callback: function (timer) {
-		time = timer.getTimeValues().toString(['hours', 'minutes', 'seconds']);
-	}});
+		var timeList = startTime.split(':');
+		timeList = timeList.map((item) => {
+		  return parseInt(item);
+		})
+
+		timeList = [0, ...timeList, 0];
+
+		console.log('****: ', timeList, timer, startTime);
+		timer.start({callback: function (newTimer) {
+			console.log("&&&: ", newTimer);
+			time = newTimer.getTimeValues().toString(['hours', 'minutes', 'seconds']);
+		}});
+
+		port.postMessage({ type: 'startTime', time: startTime });
+	}
 }
 
 function pauseTimer() {
-	audio.pause();
-	timer.pause();
+	if (audio) {
+		audio.pause();
+		timer.pause();
 
+		var port = chrome.runtime.connect({
+		    name: "Sample Communication"
+		});
+
+		port.postMessage({ type: 'pauseTime', time: time });
+	}
+}
+
+function sendTime() {
 	var port = chrome.runtime.connect({
 	    name: "Sample Communication"
 	});
-	port.postMessage({ type: 'endTime', time: time });
+
+	port.postMessage({ type: 'sendTime', time: time });
 }
 
 chrome.runtime.onConnect.addListener(function(port) {
 	
-    port.postMessage("back ground send");
-      
 	port.onMessage.addListener(function(msg) {
-		console.log("message recieved " + msg);
+		console.log('back: ', msg)
 		if (msg.type == 'play_') {
 			startTimer(msg.time);
-
 		} else {
 			pauseTimer();
+		}
+
+		switch (msg.type) {
+			case "play_":
+				startTimer(msg.time);
+				break;
+
+			case "pause_":
+				pauseTimer();
+				break;
+
+			default:
+				sendTime();
+				break;
 		}
 
 	});

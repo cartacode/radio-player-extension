@@ -2,6 +2,52 @@
 	position: relative;
 }
 
+.audio-wrapper {
+    position: relative;
+    display: flex;
+    background: #f1f3f3;
+    padding: 15px;
+    text-align: center;
+    justify-content: center;
+}
+
+.audio-wrapper #pause {
+    display: none;
+}
+
+.audio-wrapper #volume_control_off {
+    display: none;
+}
+
+.audio-status-icon {
+    margin-right: 15px;
+}
+
+#timeline {
+    margin-right: 15px;
+}
+
+.status-wrapper {
+    position: relative;
+    display: flex;
+    margin-right: 15px;
+}
+
+.status-wrapper .ring {
+    background: black;
+    height: 13px;
+    width: 13px;
+    border-radius: 100%;
+}
+
+.status-wrapper .line {
+    height: 3px;
+    width: 80px;
+    background: #aeaeae;
+    margin: auto 0;
+    align-items: center;
+}
+
 audio {
 	margin: auto;
 	display: block;

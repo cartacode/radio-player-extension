@@ -6,9 +6,17 @@
   </head>
   <body>
     <div class="audio-tag" id="audio-tag">
-      <audio id="audioPlayer" controls>
-        <source src="http://stream.949thecity.com/radio/8030/radio.mp3" type="audio/mpeg">
-      </audio>
+      <div id="audioplayer" class="audio-wrapper">
+        <div id="play" class="audio-status-icon fa fa-play"></div>
+        <div id="pause" class="audio-status-icon fa fa-pause"></div>
+        <div id="timeline"></div>
+        <div class="status-wrapper">
+          <span class="ring"></span>
+          <span class="line"></span>
+        </div>
+        <div id="volume_control" class="fa fa-volume-up"></div>
+        <div id="volume_control_off" class="fa fa-volume-off"></div>
+      </div>
       <div class="audio-status" id="audio-status">
         <div class="title-wrapper">
           <span class="artist-name" id="artist-name"></span> -
@@ -32,8 +40,6 @@
         </div>
       </div>
     </div>
-    <button id="play">Play</button>
-    <button id="pause">Pause</button>
     <div id="timer"></div>
     <script src="js/easytimer.min.js"></script>
     <script src="popup.js"></script>
