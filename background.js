@@ -60,10 +60,14 @@ function sendTime() {
 	var port = chrome.runtime.connect({
 	    name: "Sample Communication"
 	});
-	var params = { type: 'sendTime', time: time, audio: 0 };
+	var params = { type: 'sendTime', time: time, audio: 0, muted: 0 };
 
 	if (audioStart) {
 		params.audio = 1;
+	}
+
+	if (audio.muted) {
+		params.muted = 1;
 	}
 
 	port.postMessage(params);
